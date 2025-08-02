@@ -3,6 +3,8 @@ import Sidebar from './components/Sidebar';
 import Header from './components/Header';
 import LoginPage from './components/LoginPage';
 import SignupPage from './components/SignupPage';
+import ForgotPasswordPage from './components/ForgotPasswordPage';
+import OTPVerificationPage from './components/OTPVerificationPage';
 import ProfilePage from './components/ProfilePage';
 import OrdersPage from './components/OrdersPage';
 import POSPage from './components/POSPage';
@@ -46,7 +48,8 @@ import {
 function App() {
   const [activeSection, setActiveSection] = useState('dashboard');
   const [isAuthenticated, setIsAuthenticated] = useState(true); // Set to false for login flow
-  const [authMode, setAuthMode] = useState<'login' | 'signup'>('login');
+  const [authMode, setAuthMode] = useState<'login' | 'signup' | 'forgot-password' | 'otp-verification'>('login');
+  const [otpEmail, setOtpEmail] = useState('');
   const [showProfile, setShowProfile] = useState(false);
   const [showAddDeliveryman, setShowAddDeliveryman] = useState(false);
   const [showAddVendor, setShowAddVendor] = useState(false);
@@ -54,22 +57,37 @@ function App() {
 
   const handleLogin = () => {
     setIsAuthenticated(true);
+    setAuthMode('login');
   };
 
   const handleSignup = () => {
     setIsAuthenticated(true);
+    setAuthMode('login');
   };
 
+  const handleOTPVerified = (token: string, user: any) => {
+    localStorage.setItem('auth_token', token);
+    const userRole = user.role?.toLowerCase();
+    if (userRole === 'admin' || userRole === 'vendor') {
+      setUserRole(userRole as 'admin' | 'vendor');
+    } else {
+      setUserRole('vendor');
+    }
+    setIsAuthenticated(true);
+    setAuthMode('login');
+  };
   const handleRoleSelect = (role: 'admin' | 'vendor') => {
     setUserRole(role);
   };
 
   const handleLogout = () => {
+    localStorage.removeItem('auth_token');
     setIsAuthenticated(false);
     setActiveSection('dashboard');
     setShowProfile(false);
     setShowAddVendor(false);
     setUserRole('admin');
+    setAuthMode('login');
   };
 
   const handleProfileAction = (action: 'profile' | 'logout' | 'login') => {
@@ -89,22 +107,55 @@ function App() {
 
   // Show authentication pages if not authenticated
   if (!isAuthenticated) {
-    if (authMode === 'login') {
-      return (
-        <LoginPage
-          onLogin={handleLogin}
-          onSwitchToSignup={() => setAuthMode('signup')}
-          onRoleSelect={handleRoleSelect}
-        />
-      );
-    } else {
-      return (
-        <SignupPage
-          onSignup={handleSignup}
-          onSwitchToLogin={() => setAuthMode('login')}
-          onRoleSelect={handleRoleSelect}
-        />
-      );
+    switch (authMode) {
+      case 'login':
+        return (
+          <LoginPage
+            onLogin={handleLogin}
+            onSwitchToSignup={() => setAuthMode('signup')}
+            onRoleSelect={handleRoleSelect}
+            onForgotPassword={() => setAuthMode('forgot-password')}
+            onOTPRequired={(email) => {
+              setOtpEmail(email);
+              setAuthMode('otp-verification');
+            }}
+          />
+        );
+      case 'signup':
+        return (
+          <SignupPage
+            onSignup={handleSignup}
+            onSwitchToLogin={() => setAuthMode('login')}
+            onRoleSelect={handleRoleSelect}
+          />
+        );
+      case 'forgot-password':
+        return (
+          <ForgotPasswordPage
+            onBack={() => setAuthMode('login')}
+          />
+        );
+      case 'otp-verification':
+        return (
+          <OTPVerificationPage
+            email={otpEmail}
+            onBack={() => setAuthMode('login')}
+            onVerified={handleOTPVerified}
+          />
+        );
+      default:
+        return (
+          <LoginPage
+            onLogin={handleLogin}
+            onSwitchToSignup={() => setAuthMode('signup')}
+            onRoleSelect={handleRoleSelect}
+            onForgotPassword={() => setAuthMode('forgot-password')}
+            onOTPRequired={(email) => {
+              setOtpEmail(email);
+              setAuthMode('otp-verification');
+            }}
+          />
+        );
     }
   }
 

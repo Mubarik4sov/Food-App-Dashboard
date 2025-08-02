@@ -1,52 +1,62 @@
 import React, { useState } from "react";
 import { Eye, EyeOff, Mail, Lock, Utensils } from "lucide-react";
+import { apiService } from '../services/api';
 
 interface LoginPageProps {
   onLogin: () => void;
   onRoleSelect: (role: "admin" | "vendor") => void;
   onForgotPassword: () => void;
+  onOTPRequired: (email: string) => void;
+  onForgotPassword: () => void;
 }
 
-const CREDENTIALS = {
-  admin: {
-    email: "admin@efood.com",
-    password: "admin123",
-  },
-  vendor: {
-    email: "vendor@efood.com",
-    password: "vendor123",
-  },
-};
 
 export default function LoginPage({
   onLogin,
   onRoleSelect,
   onForgotPassword,
+  onOTPRequired,
 }: LoginPageProps) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsLoading(true);
     setError("");
 
-    if (
-      email === CREDENTIALS.admin.email &&
-      password === CREDENTIALS.admin.password
-    ) {
-      onRoleSelect("admin");
-      onLogin();
-    } else if (
-      email === CREDENTIALS.vendor.email &&
-      password === CREDENTIALS.vendor.password
-    ) {
-      onRoleSelect("vendor");
-      onLogin();
-    } else {
-      setError("Invalid email or password. Please check your credentials.");
+    try {
+      const response = await apiService.login({ email, password });
+      
+      if (response.success && response.data) {
+        // Store token
+        localStorage.setItem('auth_token', response.data.token);
+        
+        // Set user role
+        const userRole = response.data.user.role.toLowerCase();
+        if (userRole === 'admin' || userRole === 'vendor') {
+          onRoleSelect(userRole as 'admin' | 'vendor');
+        } else {
+          onRoleSelect('vendor'); // Default fallback
+        }
+        
+        onLogin();
+      } else {
+        setError(response.message || 'Login failed');
+      }
+    } catch (error: any) {
+      // Check if OTP verification is required
+      if (error.message?.includes('OTP') || error.message?.includes('verification')) {
+        onOTPRequired(email);
+      } else {
+        setError(error.message || 'An error occurred during login');
+      }
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -186,9 +196,10 @@ export default function LoginPage({
             {/* Submit Button */}
             <button
               type="submit"
-              className="w-full bg-red-500 text-white py-3 rounded-lg font-medium hover:bg-red-600 transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 text-lg"
+              disabled={isLoading}
+              className="w-full bg-red-500 text-white py-3 rounded-lg font-medium hover:bg-red-600 transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 text-lg disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Sign in
+              {isLoading ? 'Signing in...' : 'Sign in'}
             </button>
           </form>
         </div>
