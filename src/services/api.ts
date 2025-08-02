@@ -81,13 +81,34 @@ class ApiService {
         },
       });
 
-      const data = await response.json();
-
       if (!response.ok) {
-        throw new Error(data.message || `HTTP error! status: ${response.status}`);
+        let errorMessage = `HTTP error! status: ${response.status}`;
+        
+        try {
+          const errorData = await response.json();
+          errorMessage = errorData.message || errorMessage;
+        } catch {
+          // If JSON parsing fails, try to get text response
+          try {
+            const errorText = await response.text();
+            if (errorText) {
+              errorMessage = errorText;
+            }
+          } catch {
+            // Keep the default error message if both JSON and text parsing fail
+          }
+        }
+        
+        throw new Error(errorMessage);
       }
 
-      return data;
+      try {
+        const data = await response.json();
+        return data;
+      } catch {
+        // If response is not JSON, return a success response
+        return { success: true, message: 'Request completed successfully' } as T;
+      }
     } catch (error) {
       console.error('API request failed:', error);
       throw error;
