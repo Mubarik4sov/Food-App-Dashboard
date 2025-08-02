@@ -69,16 +69,21 @@ export default function OTPVerificationPage({ email, onBack, onVerified }: OTPVe
         otp: otpToVerify,
       });
 
-      if (response.success && response.data) {
+      if (response.success) {
+        if (response.data && response.data.token) {
         localStorage.setItem('auth_token', response.data.token);
         onVerified(response.data.token, response.data.user);
+        } else {
+          setError('OTP verified but no authentication token received');
+        }
       } else {
         setError(response.message || 'Invalid OTP');
         setOtp(['', '', '', '', '', '']);
         inputRefs.current[0]?.focus();
       }
     } catch (error) {
-      setError(error instanceof Error ? error.message : 'Verification failed');
+      const errorMessage = error.message || 'Verification failed';
+      setError(errorMessage);
       setOtp(['', '', '', '', '', '']);
       inputRefs.current[0]?.focus();
     } finally {

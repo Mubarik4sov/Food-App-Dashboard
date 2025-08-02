@@ -32,12 +32,13 @@ export default function LoginPage({
     try {
       const response = await apiService.login({ email, password });
       
-      if (response.success && response.data) {
+      if (response.success) {
+        if (response.data && response.data.token) {
         // Store token
         localStorage.setItem('auth_token', response.data.token);
         
         // Set user role
-        const userRole = response.data.user.role.toLowerCase();
+        const userRole = response.data.user?.role?.toLowerCase() || 'vendor';
         if (userRole === 'admin' || userRole === 'vendor') {
           onRoleSelect(userRole as 'admin' | 'vendor');
         } else {
@@ -45,12 +46,22 @@ export default function LoginPage({
         }
         
         onLogin();
+        } else {
+          // If login successful but no token, might need OTP verification
+          if (response.message && response.message.toLowerCase().includes('otp')) {
+            onOTPRequired(email);
+          } else {
+            setError('Login successful but no authentication token received');
+          }
+        }
       } else {
         setError(response.message || 'Login failed');
       }
     } catch (error: any) {
       // Check if OTP verification is required
-      if (error.message?.includes('OTP') || error.message?.includes('verification')) {
+      if (error.message?.toLowerCase().includes('otp') || 
+          error.message?.toLowerCase().includes('verification') ||
+          error.message?.toLowerCase().includes('verify')) {
         onOTPRequired(email);
       } else {
         setError(error.message || 'An error occurred during login');

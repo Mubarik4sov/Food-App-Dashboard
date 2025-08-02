@@ -63,8 +63,9 @@ class ApiService {
   ): Promise<T> {
     const url = `${API_BASE_URL}${endpoint}`;
     
-    const defaultHeaders = {
+    const defaultHeaders: Record<string, string> = {
       'Content-Type': 'application/json',
+      'Accept': 'application/json',
     };
 
     const token = localStorage.getItem('auth_token');
@@ -81,36 +82,51 @@ class ApiService {
         },
       });
 
-      if (!response.ok) {
-        let errorMessage = `HTTP error! status: ${response.status}`;
-        
+      // Try to parse response as JSON first
+      let responseData: any;
+      const contentType = response.headers.get('content-type');
+      
+      if (contentType && contentType.includes('application/json')) {
         try {
-          const errorData = await response.json();
-          errorMessage = errorData.message || errorMessage;
-        } catch {
-          // If JSON parsing fails, try to get text response
-          try {
-            const errorText = await response.text();
-            if (errorText) {
-              errorMessage = errorText;
-            }
-          } catch {
-            // Keep the default error message if both JSON and text parsing fail
-          }
+          responseData = await response.json();
+        } catch (jsonError) {
+          // If JSON parsing fails, create a generic response
+          responseData = {
+            success: response.ok,
+            message: response.ok ? 'Request successful' : `HTTP ${response.status}: ${response.statusText}`,
+          };
         }
-        
+      } else {
+        // If not JSON, try to get text response
+        try {
+          const textResponse = await response.text();
+          responseData = {
+            success: response.ok,
+            message: textResponse || (response.ok ? 'Request successful' : `HTTP ${response.status}: ${response.statusText}`),
+          };
+        } catch (textError) {
+          responseData = {
+            success: response.ok,
+            message: response.ok ? 'Request successful' : `HTTP ${response.status}: ${response.statusText}`,
+          };
+        }
+      }
+
+      // If response is not ok, throw an error with the message from the response
+      if (!response.ok) {
+        const errorMessage = responseData.message || responseData.error || `HTTP ${response.status}: ${response.statusText}`;
         throw new Error(errorMessage);
       }
 
-      try {
-        const data = await response.json();
-        return data;
-      } catch {
-        // If response is not JSON, return a success response
-        return { success: true, message: 'Request completed successfully' } as T;
-      }
+      return responseData;
     } catch (error) {
       console.error('API request failed:', error);
+      
+      // If it's a network error or fetch failed
+      if (error instanceof TypeError && error.message.includes('fetch')) {
+        throw new Error('Network error: Unable to connect to server. Please check your internet connection.');
+      }
+      
       throw error;
     }
   }
