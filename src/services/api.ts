@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://groceryapp-production-d3fc.up.railway.app/api';
+const API_BASE_URL = 'https://groceryapp-production-d3fc.up.railway.app/api';
 
 export interface LoginRequest {
   email: string;
