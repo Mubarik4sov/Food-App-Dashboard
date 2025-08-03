@@ -1,0 +1,470 @@
+{
+	"info": {
+		"_postman_id": "e7969a0a-c4b2-4b2f-a918-54eba6ccc301",
+		"name": "Grocery App Backend Api's",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "45722570",
+		"_collection_link": "https://muhammadmuaz-5360991.postman.co/workspace/Muhammad-Muaz's-Workspace~95841533-a3bd-434f-8c76-9710d83d44c1/collection/45722570-e7969a0a-c4b2-4b2f-a918-54eba6ccc301?action=share&source=collection_link&creator=45722570"
+	},
+	"item": [
+		{
+			"name": "Auth Api's",
+			"item": [
+				{
+					"name": "Login Api",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "accept",
+								"value": "*/*"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"identifier\": \"john.doe1@example.com\",\r\n  \"password\": \"MyStrongP@ssw0rd\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/auth/login",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						},
+						"description": "Generated from cURL: curl -X 'POST' \\\r\n  'https://groceryapp-production-d3fc.up.railway.app/api/auth/login' \\\r\n  -H 'accept: */*' \\\r\n  -H 'Content-Type: application/json' \\\r\n  -d '{\r\n  \"identifier\": \"johndoe@email.com\",\r\n  \"password\": \"password123\"\r\n}'"
+					},
+					"response": []
+				},
+				{
+					"name": "SignUp Api",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"role_name\": \"Vendor\",\r\n  \"first_name\": \"John\",\r\n  \"last_name\": \"Doe\",\r\n  \"phone_number\": \"3001234567\",\r\n  \"email_address\": \"john.doe@example.com\",\r\n  \"street_address1\": \"123 Main Street\",\r\n  \"street_address2\": \"Apt 4B\",\r\n  \"city\": \"Lahore\",\r\n  \"state\": \"Punjab\",\r\n  \"zip_code\": \"54000\",\r\n  \"description\": \"Small clothing store\",\r\n  \"restaurant_name\": null,\r\n  \"agreement_docs\": \"agreement.pdf\",\r\n  \"password\": \"MyStrongP@ssw0rd\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/auth/signup",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"signup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Request-Otp Api",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "accept",
+								"value": "*/*"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"muhammad.muaz.4sov@gmail.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/auth/request-otp",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"request-otp"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Verify-OTP Api",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "accept",
+								"value": "*/*"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"muhammad.muaz.4sov@gmail.com\",\r\n  \"otp\": \"278443\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/auth/verify-otp",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"verify-otp"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Forgot-Password Api",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"muhammad.muaz.4sov@gmail.com\",\r\n  \"newPassword\": \"Muaz1234@\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/auth/forgot-password",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"forgot-password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Users Api",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo0LCJlbWFpbCI6ImpvaG4uZG9lMUBleGFtcGxlLmNvbSIsInJvbGUiOiJBZG1pbiIsImlhdCI6MTc1NDE2NzM2MywiZXhwIjoxNzU0NzcyMTYzfQ.Mjh9ZwcZ8NXn_Y6G54H1C7hCvu1zwvJpnrjzjkV00xo",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/api/auth/getUsers?user_id=4",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"getUsers"
+							],
+							"query": [
+								{
+									"key": "role",
+									"value": "Vendor",
+									"disabled": true
+								},
+								{
+									"key": "user_id",
+									"value": "4"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Category Module Api's",
+			"item": [
+				{
+					"name": "Create / Update Category Api's",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "accept",
+								"value": "*/*"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozLCJlbWFpbCI6ImpvaG4uZG9lQGV4YW1wbGUuY29tIiwicm9sZSI6IlZlbmRvciIsImlhdCI6MTc1NDE2MjkwNywiZXhwIjoxNzU0NzY3NzA3fQ.c-WG1vWZIry7u9_ih-FFGUs6edDsyVAAgowJXxY_8bM"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"id\": 10,\r\n  \"categoryName\": \"Category2\",\r\n  \"isSubCategory\": false,\r\n  \"longDescription\": \"longDescription\",\r\n  \"shortDescription\": \"shortDescription\",\r\n  \"coverImage\": \"/coverImage.jpg\",\r\n  \"parentCategoryIds\": []\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/category/createUpdateCategory",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"category",
+								"createUpdateCategory"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Category Api",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "accept",
+								"value": "*/*"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozLCJlbWFpbCI6ImpvaG4uZG9lQGV4YW1wbGUuY29tIiwicm9sZSI6IlZlbmRvciIsImlhdCI6MTc1NDE2MjkwNywiZXhwIjoxNzU0NzY3NzA3fQ.c-WG1vWZIry7u9_ih-FFGUs6edDsyVAAgowJXxY_8bM"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"categoryId\": 10,\r\n  \"parentCategoryId\": 0\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/category/softDeleteOrDetach",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"category",
+								"softDeleteOrDetach"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Categories Api",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "accept",
+								"value": "*/*"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozLCJlbWFpbCI6ImpvaG4uZG9lQGV4YW1wbGUuY29tIiwicm9sZSI6IlZlbmRvciIsImlhdCI6MTc1NDE2MjkwNywiZXhwIjoxNzU0NzY3NzA3fQ.c-WG1vWZIry7u9_ih-FFGUs6edDsyVAAgowJXxY_8bM",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/api/category/getAll",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"category",
+								"getAll"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Only Parent Categories Api",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "accept",
+								"value": "*/*"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJlbWFpbCI6ImpvaG4uZG9lQGV4YW1wbGUuY29tIiwicm9sZSI6IlZlbmRvciIsImlhdCI6MTc1NDE0MTc4MywiZXhwIjoxNzU0NzQ2NTgzfQ.c7h7SUOAnj4lDMJ6TajZESQD0gIpnQrwTCIovjIntgU"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/api/category/getOnlyParentCategories",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"category",
+								"getOnlyParentCategories"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Sub-Categories Api",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "accept",
+								"value": "*/*"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJlbWFpbCI6ImpvaG4uZG9lQGV4YW1wbGUuY29tIiwicm9sZSI6IlZlbmRvciIsImlhdCI6MTc1NDE0MTc4MywiZXhwIjoxNzU0NzQ2NTgzfQ.c7h7SUOAnj4lDMJ6TajZESQD0gIpnQrwTCIovjIntgU"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/api/category/getSubCategories/2",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"category",
+								"getSubCategories",
+								"2"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseURL",
+			"value": "https://groceryapp-production-d3fc.up.railway.app",
+			"type": "string"
+		}
+	]
+}
