@@ -47,13 +47,22 @@ import {
 
 function App() {
   const [activeSection, setActiveSection] = useState('dashboard');
-  const [isAuthenticated, setIsAuthenticated] = useState(true); // Set to false for login flow
+  const [isAuthenticated, setIsAuthenticated] = useState(false); // Default to false - user must login
   const [authMode, setAuthMode] = useState<'login' | 'signup' | 'forgot-password' | 'otp-verification'>('login');
   const [otpEmail, setOtpEmail] = useState('');
   const [showProfile, setShowProfile] = useState(false);
   const [showAddDeliveryman, setShowAddDeliveryman] = useState(false);
   const [showAddVendor, setShowAddVendor] = useState(false);
   const [userRole, setUserRole] = useState<'admin' | 'vendor'>('admin');
+
+  // Check for existing authentication on app load
+  React.useEffect(() => {
+    const token = localStorage.getItem('auth_token');
+    if (token) {
+      // TODO: Optionally verify token with backend
+      setIsAuthenticated(true);
+    }
+  }, []);
 
   const handleLogin = () => {
     setIsAuthenticated(true);
