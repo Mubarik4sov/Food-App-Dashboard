@@ -76,10 +76,12 @@ function App() {
 
   const handleOTPVerified = (token: string, user: any) => {
     localStorage.setItem('auth_token', token);
-    const userRole = user.role?.toLowerCase();
+    const userRole = user.role.toLowerCase();
     if (userRole === 'admin' || userRole === 'vendor') {
       setUserRole(userRole as 'admin' | 'vendor');
     } else {
+      // Handle unexpected roles - default to vendor but could show error
+      console.warn(`Unexpected user role: ${user.role}, defaulting to vendor`);
       setUserRole('vendor');
     }
     setIsAuthenticated(true);

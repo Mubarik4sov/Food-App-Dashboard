@@ -30,32 +30,33 @@ export default function LoginPage({
     setError("");
 
     try {
-      const response = await apiService.login({ email, password });
+      const response = await apiService.login({ identifier: email, password });
       
-      if (response.success) {
-        if (response.data && response.data.token) {
+      if (response.errorCode === 0 && response.data) {
         // Store token
         localStorage.setItem('auth_token', response.data.token);
         
         // Set user role
-        const userRole = response.data.user?.role?.toLowerCase() || 'vendor';
+        const userRole = response.data.user.role.toLowerCase();
         if (userRole === 'admin' || userRole === 'vendor') {
           onRoleSelect(userRole as 'admin' | 'vendor');
         } else {
-          onRoleSelect('vendor'); // Default fallback
+          // Handle unexpected roles
+          setError(`Unsupported user role: ${response.data.user.role}`);
+          return;
         }
         
         onLogin();
-        } else {
-          // If login successful but no token, might need OTP verification
-          if (response.message && response.message.toLowerCase().includes('otp')) {
-            onOTPRequired(email);
-          } else {
-            setError('Login successful but no authentication token received');
-          }
-        }
       } else {
-        setError(response.message || 'Login failed');
+        // Check if OTP verification is required
+        const errorMsg = response.errorMessage || 'Login failed';
+        if (errorMsg.toLowerCase().includes('otp') || 
+            errorMsg.toLowerCase().includes('verification') ||
+            errorMsg.toLowerCase().includes('verify')) {
+          onOTPRequired(email);
+        } else {
+          setError(errorMsg);
+        }
       }
     } catch (error: any) {
       // Check if OTP verification is required
@@ -64,7 +65,7 @@ export default function LoginPage({
           error.message?.toLowerCase().includes('verify')) {
         onOTPRequired(email);
       } else {
-        setError(error.message || 'An error occurred during login');
+        setError(error.message || 'Network error. Please check your connection and try again.');
       }
     } finally {
       setIsLoading(false);

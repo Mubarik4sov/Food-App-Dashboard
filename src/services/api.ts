@@ -1,22 +1,23 @@
 const API_BASE_URL = '/api';
 
 export interface LoginRequest {
-  email: string;
+  identifier: string;
   password: string;
 }
 
 export interface LoginResponse {
-  success: boolean;
-  message: string;
-  data?: {
+  errorCode: number;
+  errorMessage: string | null;
+  data: {
     token: string;
     user: {
-      id: string;
+      id: number;
       email: string;
       role: string;
-      name?: string;
+      first_name: string;
+      last_name: string;
     };
-  };
+  } | null;
 }
 
 export interface RequestOTPRequest {
